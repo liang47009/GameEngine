@@ -15,23 +15,26 @@ public class UserModule implements IModule {
 
 	private Map<Byte, ILogicManager> logicManagers = new ConcurrentHashMap<Byte, ILogicManager>();
 
-	private static final byte USER_LOGIN_LOGIC = 1;
+	private static final byte USER_MANAGER_LOGIC_1 = 1;
 
 	public UserModule() {
-		logicManagers.put(USER_LOGIN_LOGIC, new UserManager());
+		UserManager userManager = new UserManager();
+		logicManagers.put(USER_MANAGER_LOGIC_1, userManager);
 	}
 
 	@Override
-	public void handle(Buffer data) {
+	public void handle(Buffer buffer) {
 		// TODO Auto-generated method stub
-		// Log.i("UserModule handle data: " + data.length());
-		int pos = 0;
-		byte pid = BufferReader.readByte(data, pos);
-		pos++;
-		byte subpid = BufferReader.readByte(data, pos);
-		pos++;
-		String msg = BufferReader.readString(data, pos);
-		Log.t(msg);
+		byte pid = BufferReader.readByte(buffer, 0);
+		if (pid > 0) {
+			ILogicManager logic = logicManagers.get(pid);
+			if (logic == null) {
+				Log.e("no logic to execute!");
+			} else {
+				Buffer data = Buffer.buffer().appendBuffer(buffer, 1, buffer.length() - 1);
+				logic.execute(data);
+			}
+		}
 	}
 
 }

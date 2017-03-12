@@ -30,8 +30,7 @@ public class Client extends AbstractVerticle {
 						@Override
 						public void handle(Buffer buffer) {
 							// TODO Auto-generated method stub
-							Log.d("client recv:"
-									+ new String(buffer.getBytes()));
+							Log.d("client recv:" + new String(buffer.getBytes()));
 						}
 					});
 					new Timer().schedule(new TimerTask() {
@@ -39,9 +38,9 @@ public class Client extends AbstractVerticle {
 						public void run() {
 							String str = "hello everyone!";
 							Buffer buffer = Buffer.buffer();
-							buffer.appendByte((byte) 1);
-							buffer.appendByte((byte) 1);
-							buffer.appendByte((byte) 1);
+							buffer.appendByte((byte) 1);// module
+							buffer.appendByte((byte) 1);// pid
+							buffer.appendByte((byte) 0);// subpid
 
 							byte[] bytes = str.getBytes();
 							buffer.appendInt(bytes.length);
